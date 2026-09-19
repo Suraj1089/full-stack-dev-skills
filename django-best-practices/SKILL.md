@@ -14,13 +14,13 @@ globs:
   - "**/tests/*.py"
 ---
 
-# Django Best Practices Tool Wrapper & Reviewer
+# Django Best Practices Tool Wrapper and Reviewer
 
-A strict guide to writing correct and performant Django and DRF code. Based on real-world patterns, the HackSoftware Styleguide, and common architectural pitfalls.
+A guide to writing correct and performant Django and DRF code. It draws on the HackSoftware Styleguide and common production failures.
 
 ## Context
 
-This skill is the final word on Django design constraints. It covers 15 core categories of real-world expertise (like zero-downtime migrations, avoiding ORM locks, and decoupling business logic). Treat these patterns as strict rules rather than suggestions.
+This skill covers 15 areas, including zero-downtime migrations, ORM locking, and business-logic boundaries. Treat the patterns as defaults when working on Django code.
 
 ## Instructions
 

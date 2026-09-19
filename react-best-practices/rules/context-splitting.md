@@ -3,11 +3,11 @@
 ## context-splitting
 
 ### Why it matters
-Any component that calls `useContext(SomeContext)` re-renders whenever that context's value changes. If you shove everything — theme, user, locale, feature flags — into one giant context object, then every consumer re-renders when *any* of those values changes, even if a given component only cares about one of them.
+Any component that calls `useContext(SomeContext)` re-renders whenever that context's value changes. If you shove everything - theme, user, locale, feature flags - into one giant context object, then every consumer re-renders when *any* of those values changes, even if a given component only cares about one of them.
 
 Split unrelated data into separate contexts. Components that read `UserContext` won't re-render when the theme changes, and vice versa.
 
-### ❌ Wrong — monolithic context
+### ❌ Wrong - monolithic context
 ```jsx
 // One context for everything
 const AppContext = createContext();
@@ -31,7 +31,7 @@ function Header() {
 }
 ```
 
-### ✅ Right — separate contexts by domain
+### ✅ Right - separate contexts by domain
 ```jsx
 // Each domain gets its own context
 const ThemeContext = createContext();

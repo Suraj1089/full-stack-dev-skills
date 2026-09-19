@@ -1,7 +1,7 @@
 ## test-pytest-fixtures
 
 ### Why it matters
-`pytest-django` combined with `factory_boy` cleanly outperforms standard fixtures by allowing dynamic, explicit, reusable object creation avoiding database integrity headaches entirely.
+`pytest-django` with `factory_boy` supports explicit, reusable object creation without brittle static fixtures.
 
 ### ❌ Wrong
 ```python

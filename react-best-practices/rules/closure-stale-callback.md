@@ -10,9 +10,9 @@ When a function is created in JavaScript, it captures a snapshot of all the vari
 ## closure-stale-callback
 
 ### Why it matters
-If a function is cached — via `useCallback` with an empty dep array, stored in a ref at init time, or passed to a `useEffect` that doesn't list it as a dependency — it captures the values from the render where it was created. Later state changes are invisible to it. This is a **stale closure**: your app silently uses outdated values.
+If a function is cached - via `useCallback` with an empty dep array, stored in a ref at init time, or passed to a `useEffect` that doesn't list it as a dependency - it captures the values from the render where it was created. Later state changes are invisible to it. This is a **stale closure**: your app silently uses outdated values.
 
-### ❌ Wrong — empty dependency array freezes state
+### ❌ Wrong - empty dependency array freezes state
 ```jsx
 function SearchForm() {
   const [query, setQuery] = useState('');
@@ -33,7 +33,7 @@ function SearchForm() {
 }
 ```
 
-### ✅ Right — include all dependencies
+### ✅ Right - include all dependencies
 ```jsx
 function SearchForm() {
   const [query, setQuery] = useState('');
@@ -54,7 +54,7 @@ function SearchForm() {
 ## closure-ref-trick
 
 ### Why it matters
-Sometimes you need a callback that is **reference-stable** (same function identity across renders, so memoized children don't re-render) but also reads the **latest** state when called. These goals conflict — unless you use a ref to bridge the gap.
+Sometimes you need a callback that is **reference-stable** (same function identity across renders, so memoized children don't re-render) but also reads the **latest** state when called. These goals conflict - unless you use a ref to bridge the gap.
 
 ### ✅ Pattern: stable wrapper + mutable ref
 ```jsx

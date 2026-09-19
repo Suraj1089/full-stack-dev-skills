@@ -5,7 +5,7 @@
 ### Why it matters
 React Server Components (RSC) render on the server and stream the result to the client as serialized HTML and UI instructions. They ship **zero JavaScript** to the browser. By co-locating data fetching with the component that uses it, you avoid client-side fetch waterfalls and loading spinners.
 
-### ❌ Wrong — everything is a Client Component
+### ❌ Wrong - everything is a Client Component
 ```jsx
 'use client' // Forces the entire route to run on the client
 
@@ -22,13 +22,13 @@ export default function DashboardPage() {
 }
 ```
 
-### ✅ Right — async Server Component
+### ✅ Right - async Server Component
 ```jsx
 // No 'use client'. Runs on the server.
 import { fetchUserData } from '@/db/queries'; 
 
 export default async function DashboardPage() {
-  // Direct await — no API route needed, no client JS shipped
+  // Direct await - no API route needed, no client JS shipped
   const data = await fetchUserData(); 
 
   return <HeavyDashboard data={data} />; 
@@ -42,7 +42,7 @@ export default async function DashboardPage() {
 ### Why it matters
 When a Server Component passes props to a `'use client'` component, every prop crosses a network boundary and must be serializable. Passing an entire database row (50 columns, including sensitive fields) wastes bandwidth and risks leaking data the client shouldn't see.
 
-### ❌ Wrong — passing the entire database record
+### ❌ Wrong - passing the entire database record
 ```jsx
 export default async function ProductPage({ id }) {
   // Full database row, including admin notes and internal IDs
@@ -53,7 +53,7 @@ export default async function ProductPage({ id }) {
 }
 ```
 
-### ✅ Right — pick only what the client needs
+### ✅ Right - pick only what the client needs
 ```jsx
 export default async function ProductPage({ id }) {
   const rawDbProduct = await db.products.find(id); 
@@ -74,9 +74,9 @@ export default async function ProductPage({ id }) {
 ## server-auth-actions
 
 ### Why it matters
-Server Actions (React 19) let you call server-side mutations directly from `<form action={...}>`. But they're effectively public API endpoints — anyone can call them. You have to authenticate and authorize on the server side, just like you would with any API route.
+Server Actions (React 19) let you call server-side mutations directly from `<form action={...}>`. But they're effectively public API endpoints - anyone can call them. You have to authenticate and authorize on the server side, just like you would with any API route.
 
-### ❌ Wrong — no authentication
+### ❌ Wrong - no authentication
 ```jsx
 'use server'
 
@@ -86,7 +86,7 @@ export async function deleteUserAccount(userId) {
 }
 ```
 
-### ✅ Right — authenticate before mutating
+### ✅ Right - authenticate before mutating
 ```jsx
 'use server'
 import { getSession } from '@/auth';

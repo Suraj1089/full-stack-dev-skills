@@ -39,7 +39,7 @@ function SearchBox() {
 ## ref-forward
 
 ### Why it matters
-By default, you can't pass a `ref` prop to a custom function component — React strips it. For a parent to access a DOM node inside a child component, the child must opt in using `forwardRef`.
+By default, you can't pass a `ref` prop to a custom function component - React strips it. For a parent to access a DOM node inside a child component, the child must opt in using `forwardRef`.
 
 ### ✅ Using forwardRef
 ```jsx
@@ -64,14 +64,14 @@ function CommandPalette() {
 }
 ```
 
-> **React 19 note:** In React 19+, `ref` is a regular prop — `forwardRef` is deprecated. You destructure it directly: `function FancyInput({ ref, children })`.
+> **React 19 note:** In React 19+, `ref` is a regular prop - `forwardRef` is deprecated. You destructure it directly: `function FancyInput({ ref, children })`.
 
 ---
 
 ## ref-imperative-handle
 
 ### Why it matters
-Forwarding a raw DOM ref gives the parent full access to the node — it could mutate styles, read values, or call any DOM method. `useImperativeHandle` lets you expose a limited, controlled API instead.
+Forwarding a raw DOM ref gives the parent full access to the node - it could mutate styles, read values, or call any DOM method. `useImperativeHandle` lets you expose a limited, controlled API instead.
 
 ### ✅ Controlled API surface
 ```jsx
@@ -99,7 +99,7 @@ const SecureTextInput = forwardRef(function SecureTextInput(props, ref) {
 ## ref-no-overuse
 
 ### Why it matters
-React is built around declarative rendering — you describe what the UI should look like given the current state, and React figures out the DOM changes. Refs are an escape hatch for things React can't do declaratively. Reach for declarative patterns first.
+React is built around declarative rendering - you describe what the UI should look like given the current state, and React figures out the DOM changes. Refs are an escape hatch for things React can't do declaratively. Reach for declarative patterns first.
 
 ### Prefer declarative approaches
 | Imperative (escape hatch) | Declarative (preferred) |

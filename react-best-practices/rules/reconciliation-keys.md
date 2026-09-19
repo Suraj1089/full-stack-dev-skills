@@ -7,7 +7,7 @@ React compares its internal fiber tree between renders. If a component element h
 
 This causes bugs when you conditionally swap between two components that share the same root type.
 
-### ❌ Wrong — shared position leaks state
+### ❌ Wrong - shared position leaks state
 ```jsx
 function App() {
   const [isLogin, setIsLogin] = useState(true);
@@ -26,7 +26,7 @@ function App() {
 ```
 **The bug:** A user types "John" in the Username field, clicks "Switch Mode", and "John" is still in the Email field. React reused the `<Input>` instance because the type and position didn't change.
 
-### ✅ Right — use `key` to force a new instance
+### ✅ Right - use `key` to force a new instance
 ```jsx
 {isLogin
   ? <Input key="login-username" placeholder="Username" />
@@ -40,7 +40,7 @@ Different keys tell React these are separate components. It destroys the old one
 ## recon-key-identity
 
 ### Why it matters
-The `key` prop isn't just an ESLint nag for lists. It's React's mechanism for tracking **identity**. A changed key tells React: "This is a different entity — destroy the old one and create a new one." A stable key tells React: "Same thing, just update its props."
+The `key` prop isn't just an ESLint nag for lists. It's React's mechanism for tracking **identity**. A changed key tells React: "This is a different entity - destroy the old one and create a new one." A stable key tells React: "Same thing, just update its props."
 
 ### Key requirements
 | Requirement | What goes wrong if you break it |
@@ -49,9 +49,9 @@ The `key` prop isn't just an ESLint nag for lists. It's React's mechanism for tr
 | Stable across renders | Components unmount and remount constantly, losing scroll position and focus |
 | Derived from data | Use `item.id`, not the array index (unless the list never reorders) |
 
-### ❌ Wrong — unstable keys
+### ❌ Wrong - unstable keys
 ```jsx
-// Math.random() creates a new key every render — the whole list rebuilds
+// Math.random() creates a new key every render - the whole list rebuilds
 {users.map(user => <UserRow key={Math.random()} user={user} />)}
 
 // Array index is dangerous if users can be reordered or deleted.
@@ -59,7 +59,7 @@ The `key` prop isn't just an ESLint nag for lists. It's React's mechanism for tr
 {users.map((user, index) => <UserRow key={index} user={user} />)}
 ```
 
-### ✅ Right — stable identity from data
+### ✅ Right - stable identity from data
 ```jsx
 {users.map(user => <UserRow key={user.uuid} user={user} />)}
 ```
@@ -69,14 +69,14 @@ The `key` prop isn't just an ESLint nag for lists. It's React's mechanism for tr
 ## recon-no-inline-definition
 
 ### Why it matters
-Defining a component function inside another component's render body means React sees a brand-new function type every render. Since the type changed, React unmounts the old instance and mounts a new one — wiping all its state, tearing down effects, and causing flickering.
+Defining a component function inside another component's render body means React sees a brand-new function type every render. Since the type changed, React unmounts the old instance and mounts a new one - wiping all its state, tearing down effects, and causing flickering.
 
-### ❌ Wrong — inline component definition
+### ❌ Wrong - inline component definition
 ```jsx
 function UserProfile() {
   const [clicks, setClicks] = useState(0);
 
-  // New function reference every render — React treats it as a new component type
+  // New function reference every render - React treats it as a new component type
   function InnerBadge() {
     const [hovered, setHovered] = useState(false); // State resets every parent render
     return <span onMouseEnter={() => setHovered(true)}>Role</span>;
@@ -90,7 +90,7 @@ function UserProfile() {
 }
 ```
 
-### ✅ Right — define components at module level
+### ✅ Right - define components at module level
 ```jsx
 // Defined once. React reuses the same type.
 function InnerBadge() {
@@ -109,7 +109,7 @@ function UserProfile() {
 ## recon-key-reset
 
 ### Why it matters
-Sometimes you need to wipe a component's state completely — when routing to a different entity or switching data contexts. Instead of writing `useEffect` chains that manually reset each piece of state, change the component's `key`. React treats a key change as replacing the component entirely: unmount the old one, mount a fresh one.
+Sometimes you need to wipe a component's state completely - when routing to a different entity or switching data contexts. Instead of writing `useEffect` chains that manually reset each piece of state, change the component's `key`. React treats a key change as replacing the component entirely: unmount the old one, mount a fresh one.
 
 ### ✅ Pattern: key-driven reset
 ```jsx

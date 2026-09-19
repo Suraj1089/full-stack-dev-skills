@@ -1,7 +1,7 @@
 ## orm-nplusone
 
 ### Why it matters
-The N+1 query problem occurs when you access a related object in a loop. Django's ORM is lazy, and accessing related data without directly fetching it beforehand causes the ORM to execute a separate SQL query for each item in the list, completely destroying performance for large datasets.
+The N+1 query problem occurs when a loop accesses related objects one at a time. Django's lazy ORM then runs one extra SQL query per item, which is slow for large result sets.
 
 ### ❌ Wrong
 ```python

@@ -1,7 +1,7 @@
 ---
 name: change-critic
 description: >
-  Critically evaluate any proposed code change — removal, refactor, simplification, or update —
+  Critically evaluate any proposed code change: removal, refactor, simplification, or update.
   BEFORE applying it. Use this skill whenever the user asks "should we remove this?",
   "is this needed?", "can we delete this?", "let's simplify this", "should we replace X with Y",
   "is this better without X?", or any variation where they are questioning whether to remove or
@@ -19,7 +19,7 @@ You are a **critical reviewer**, not a yes-machine.
 When a user asks whether to remove, simplify, replace, or update a piece of code, your job is to:
  
 1. **Analyze the impact** of the proposed change
-2. **Give an honest verdict** — even if it contradicts what the user seems to expect
+2. **Give an honest verdict** - even if it contradicts what the user seems to expect
 3. **Ask for explicit confirmation** before making any change
  
 You must never skip straight to "Sure, let me remove that!" just because the user seems to want you to.
@@ -72,7 +72,7 @@ Pick one of these:
 | Verdict | Meaning |
 |---|---|
 | ✅ **Safe to remove** | No real impact, code is genuinely dead or redundant |
-| ⚠️ **Risky — proceed carefully** | Removing it has trade-offs, some things may break or degrade |
+| ⚠️ **Risky - proceed carefully** | Removing it has trade-offs, some things may break or degrade |
 | ❌ **Do NOT remove** | This code is doing something important; removing it will cause bugs, regressions, or degraded behavior |
  
 ---
@@ -111,7 +111,7 @@ Only after the user says **yes** (or equivalent) should you make the change.
  
 - Be direct. Do not soften your verdict to please the user.
 - If the user is wrong, say so clearly but respectfully.
-- Do not say things like "That's a great idea, but..." — this is sycophantic padding.
+- Do not say things like "That's a great idea, but..." - this is sycophantic padding.
 - You are a senior engineer reviewing a junior's PR. Be honest.
 - If you genuinely aren't sure about impact, say that explicitly instead of guessing.
  
@@ -132,7 +132,7 @@ Only after the user says **yes** (or equivalent) should you make the change.
 > If removed:
 > - Any code that accesses `.blogs` on the queryset result will trigger an extra DB query per row (N+1 problem)
 > - In a list view with 50+ records, this could fire 50 extra queries silently
-> - No visible error — it will just get slower
+> - No visible error - it will just get slower
 >
 > If kept:
 > - 1 optimized JOIN query instead of N+1 lazy lookups
@@ -148,7 +148,7 @@ Only after the user says **yes** (or equivalent) should you make the change.
  
 ## Edge Cases
  
-- **User insists anyway**: Respect their decision but add a short warning comment in the code: `# removed select_related — may cause N+1 queries`
+- **User insists anyway**: Respect their decision but add a short warning comment in the code: `# removed select_related - may cause N+1 queries`
 - **Truly dead code**: If analysis confirms 100% it's unreachable or already covered elsewhere, say so directly and proceed after confirmation
 - **Refactor vs removal**: If the user wants to replace X with Y, analyze both the removal of X AND the correctness of Y separately
-- **Multiple items**: Analyze each item independently — don't bundle them into one "yeah looks fine" response
+- **Multiple items**: Analyze each item independently - don't bundle them into one "yeah looks fine" response

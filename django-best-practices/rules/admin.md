@@ -22,14 +22,14 @@ class OrderAdmin(admin.ModelAdmin):
 ```
 
 ### Notes
-- `list_select_related = True` automatically pre-fetches all `ForeignKey` relations present on the model, but it is directly preferable to pass a tuple targeting the exact tables needed.
+- `list_select_related = True` prefetches every `ForeignKey` relation on the model. Prefer a tuple that names only the relations the page needs.
 
 ---
 
 ## admin-foreignkey-dropdowns
 
 ### Why it matters
-The default Django Admin renders every single ForeignKey as an HTML `<select>` dropdown populated with all possible foreign values. If you possess a `User` table with 2 million users, navigating to the admin view for an `Order` will blindly load 2 million users from the database into your web server's RAM in order to construct a gigantic `<option>` list crashing out of memory.
+The default Django Admin renders each ForeignKey as an HTML `<select>` populated with every related value. With 2 million users, an `Order` admin page could load the entire table into server memory to build the option list.
 
 ### ❌ Wrong
 ```python

@@ -5,13 +5,13 @@
 ### Why it matters
 `useEffect` runs **after** the browser has painted. If your effect measures the DOM (say, getting a container's width) and then calls `setState` based on that measurement, you get a double render. The user sees:
 
-1. First paint — the element appears at position 0,0 (or some default).
+1. First paint - the element appears at position 0,0 (or some default).
 2. The effect fires, updates state, and triggers a re-render.
-3. Second paint — the element jumps to the correct position.
+3. Second paint - the element jumps to the correct position.
 
-That jump is visible as a flash or flicker. For layout measurements that determine positioning, use `useLayoutEffect` instead — it runs **after** React updates the DOM but **before** the browser paints, so the user only ever sees the final result.
+That jump is visible as a flash or flicker. For layout measurements that determine positioning, use `useLayoutEffect` instead - it runs **after** React updates the DOM but **before** the browser paints, so the user only ever sees the final result.
 
-### ❌ Wrong — flicker with useEffect
+### ❌ Wrong - flicker with useEffect
 ```jsx
 function Tooltip({ targetRect, children }) {
   const tooltipRef = useRef(null);
@@ -34,7 +34,7 @@ function Tooltip({ targetRect, children }) {
 }
 ```
 
-### ✅ Right — no flicker with useLayoutEffect
+### ✅ Right - no flicker with useLayoutEffect
 ```jsx
 function Tooltip({ targetRect, children }) {
   const tooltipRef = useRef(null);
@@ -68,7 +68,7 @@ function Tooltip({ targetRect, children }) {
 ### Why it matters
 `useLayoutEffect` doesn't run on the server (Next.js, Remix). React emits a warning, and the measurement never happens during server rendering. This creates a hydration mismatch between the server HTML and the client's first render.
 
-### ✅ Pattern — isReady gate for SSR
+### ✅ Pattern - isReady gate for SSR
 ```jsx
 function ResponsiveNav({ items }) {
   const navRef = useRef(null);

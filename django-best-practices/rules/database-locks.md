@@ -37,7 +37,7 @@ def deposit_money(wallet_id, amount):
 ## orm-select-for-update-nowait
 
 ### Why it matters
-Occasionally, having a process wait for a lock is a terrible idea—for example, a polling queue worker checking if a job is free. By skipping already-locked rows implicitly, the application scales dramatically without creating database deadlocks.
+Sometimes a process should not wait for a lock, such as a queue worker checking for available jobs. Skipping locked rows lets other workers continue without adding deadlock risk.
 
 ### ❌ Wrong
 ```python

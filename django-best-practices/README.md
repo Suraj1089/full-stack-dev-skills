@@ -1,14 +1,14 @@
 # Django Best Practices Skill
 
-An AI Agent skill that enforces best practices in Django, Django REST Framework, WebSockets (Channels), and asynchronous architectures.
+An AI agent skill for Django, Django REST Framework, WebSockets (Channels), and asynchronous code.
 
-This skill is built for integration into AI-agent workspace environments (like Claude Code, Cursor, Copilot, or Windsurf). When installed, it acts as a guide for avoiding architectural pitfalls, fixing N+1 queries, improving security, and optimizing database workloads.
+Use this skill in an AI-agent workspace such as Claude Code, Cursor, Copilot, or Windsurf. It covers architecture, N+1 queries, security, and database performance.
 
 ---
 
 ## What it does
 
-This skill helps your AI agent write better Django code. AI models often have outdated or contradictory knowledge about Django. This overrides generic suggestions with modern rules for building scalable apps.
+The rules give an AI agent a current baseline for Django code and call out advice that often leads to slow or unsafe applications.
 
 It helps agents avoid:
 - **Performance bottlenecks:** Unpaginated querysets, missing `select_related`/`prefetch_related`, loading millions of rows into RAM.
@@ -20,7 +20,7 @@ It helps agents avoid:
 
 ## Internal Structure
 
-The core rules are broken down into logical files located in the `rules/` directory context, keeping token overhead low.
+The rules are split into focused files in the `rules/` directory so an agent can load only the relevant material.
 
 - `rules/admin.md`: Django admin optimizations (`autocomplete_fields`).
 - `rules/architecture.md`: Services Layer, Data Selectors, DRY principles.
@@ -42,8 +42,8 @@ The core rules are broken down into logical files located in the `rules/` direct
 
 ## Usage & Setup
 
-1. Clone this skill directory directly into your project's agent workspace.
-2. If using an AI agent registry, install this via the CLI or UI to ensure `SKILL.md` is registered so system prompts know when to scan this knowledge base.
-3. The centralized `AGENTS.md` file serves as a monolithic compilation designed for legacy AI interfaces requiring single-file text injections.
+1. Copy this skill directory into your agent workspace.
+2. If your agent has a skill registry, register `SKILL.md` there.
+3. Use `AGENTS.md` when the agent needs all rules in one file.
 
-By following these constraints, agents generating Django code will write code that scales, avoids regressions, and passes security audits without requiring a human to manually point out common mistakes.
+These rules help agents produce Django code with fewer performance, correctness, and security mistakes.

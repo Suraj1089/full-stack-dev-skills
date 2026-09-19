@@ -1,6 +1,6 @@
 # Memoization usage
 
-Try composition first. `React.memo`, `useMemo`, and `useCallback` solve specific, measured performance problems — they're not defensive defaults. Adding them everywhere hurts performance because the comparison checks and memory allocation have their own cost.
+Try composition first. `React.memo`, `useMemo`, and `useCallback` solve specific, measured performance problems - they're not defensive defaults. Adding them everywhere hurts performance because the comparison checks and memory allocation have their own cost.
 
 ---
 
@@ -34,19 +34,19 @@ const ExpensiveDataGrid = React.memo(function ExpensiveDataGrid({ rows, columns 
 ### Why it matters
 `React.memo` uses **shallow equality**. Primitives (`string`, `number`, `boolean`) compare by value. Objects, arrays, and functions compare by **reference**. If you create an object or callback inside a component body, it gets a new reference every render, breaking `React.memo` on any child you pass it to.
 
-### ❌ Wrong — new object reference every render
+### ❌ Wrong - new object reference every render
 ```jsx
 function Dashboard() {
   const [count, setCount] = useState(0);
 
-  // New object on every render — ExpensiveDataGrid's memo always fails
+  // New object on every render - ExpensiveDataGrid's memo always fails
   const gridConfig = { theme: 'dark', sort: 'asc' }; 
 
   return <ExpensiveDataGrid config={gridConfig} />; 
 }
 ```
 
-### ✅ Right — stabilize references
+### ✅ Right - stabilize references
 ```jsx
 function Dashboard() {
   const [count, setCount] = useState(0);
@@ -55,7 +55,7 @@ function Dashboard() {
   const gridConfig = useMemo(() => ({ theme: 'dark', sort: 'asc' }), []); 
   const onRowClick = useCallback((id) => openDetails(id), []); 
 
-  // Now memo works — props haven't changed
+  // Now memo works - props haven't changed
   return <ExpensiveDataGrid config={gridConfig} onClick={onRowClick} />; 
 }
 ```
@@ -72,7 +72,7 @@ function Dashboard() {
 function Form() {
   const [text, setText] = useState('');
 
-  // Pointless. <button> is native DOM — it doesn't check props with React.memo.
+  // Pointless. <button> is native DOM - it doesn't check props with React.memo.
   const onSubmit = useCallback(() => submitForm(), []);
   
   // Pointless. <Input> isn't wrapped in React.memo. It'll re-render regardless.
@@ -96,7 +96,7 @@ function Form() {
 ### Why it matters
 Wrapping a component in `React.memo` while passing `children` doesn't work. JSX compiles children into `React.createElement(...)` inside the parent, so the children prop gets a new object reference every render. The memo comparison on `{ children }` fails every time.
 
-### ❌ Wrong — memo broken by children
+### ❌ Wrong - memo broken by children
 ```jsx
 const MemoizedCard = React.memo(function Card({ children }) {
   return <div className="card-ui">{children}</div>;
@@ -114,7 +114,7 @@ function Parent() {
 }
 ```
 
-### ✅ Fix — memoize the children in the parent
+### ✅ Fix - memoize the children in the parent
 ```jsx
 function Parent() {
   const [count, setCount] = useState(0);
@@ -126,7 +126,7 @@ function Parent() {
 }
 ```
 
-Or use composition patterns (`compose-children-prop`) to avoid the problem entirely — no memoization needed.
+Or use composition patterns (`compose-children-prop`) to avoid the problem entirely - no memoization needed.
 
 ---
 **Related rules:** `rerender-parent`, `compose-children-prop`

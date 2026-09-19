@@ -3,9 +3,9 @@
 ## rerender-transitions
 
 ### Why it matters
-React 18 added concurrent rendering. By default, every `setState` call is urgent — React blocks the main thread until it finishes rendering, which locks up user input. `useTransition` lets you mark a state update as non-urgent. React will start rendering it in the background, but if the user types or clicks, React drops that background work to handle the interaction first. The result: no input lag.
+React 18 added concurrent rendering. By default, every `setState` call is urgent - React blocks the main thread until it finishes rendering, which locks up user input. `useTransition` lets you mark a state update as non-urgent. React will start rendering it in the background, but if the user types or clicks, React drops that background work to handle the interaction first. The result: no input lag.
 
-### ❌ Wrong — blocking the main thread
+### ❌ Wrong - blocking the main thread
 ```jsx
 function SearchPage() {
   const [query, setQuery] = useState('');
@@ -27,7 +27,7 @@ function SearchPage() {
 }
 ```
 
-### ✅ Right — prioritize typing over the heavy render
+### ✅ Right - prioritize typing over the heavy render
 ```jsx
 function SearchPage() {
   const [query, setQuery] = useState('');
@@ -59,9 +59,9 @@ function SearchPage() {
 ## rerender-use-deferred-value
 
 ### Why it matters
-`useTransition` requires direct access to the `setState` call so you can wrap it. `useDeferredValue` is for when you receive a prop from a parent and have no control over how it's set. It returns a "lagging" version of the value — the component keeps showing the old value while React computes the new one in the background.
+`useTransition` requires direct access to the `setState` call so you can wrap it. `useDeferredValue` is for when you receive a prop from a parent and have no control over how it's set. It returns a "lagging" version of the value - the component keeps showing the old value while React computes the new one in the background.
 
-### ✅ Pattern — deferring an incoming prop
+### ✅ Pattern - deferring an incoming prop
 ```jsx
 // SearchResults doesn't control `query`, it just receives it.
 function SearchResults({ query }) {

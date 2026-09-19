@@ -28,14 +28,14 @@ def process_payment(order_id, amount):
 ```
 
 ### Notes
-- Always design tasks expecting them to blindly run twice simultaneously. Ensure database constraints or explicit locking handles conflicts cleanly.
+- Assume a task may run twice at the same time. Use database constraints or explicit locking to handle conflicts.
 
 ---
 
 ## async-task-signatures
 
 ### Why it matters
-Passing massive ORM objects into Celery task signatures breaks fundamentally when the task is picked up by a worker much later. The database state will have radically changed, and the serialized object will be stale.
+Passing ORM objects into Celery task signatures is unsafe when a worker handles the task later. The database may have changed, and the serialized object may be stale.
 
 ### ❌ Wrong
 ```python
@@ -67,7 +67,7 @@ def send_email(user_id):
 ## async-django-views
 
 ### Why it matters
-Django supports `async def` views since 3.1. However, making a view `async` completely destroys performance if you directly block it with synchronously slow Django ORM queries without wrapping them.
+Django supports `async def` views since 3.1. An async view still blocks the event loop if it calls slow synchronous ORM queries without a wrapper.
 
 ### ❌ Wrong
 ```python

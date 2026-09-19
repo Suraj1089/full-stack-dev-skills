@@ -5,7 +5,7 @@
 ### Why it matters
 Without Suspense, React waits for every async operation to finish before showing anything. If your page has a fast query (user profile) and a slow one (billing history), the whole page stays blank until the slow query completes. `<Suspense>` lets you show the fast parts immediately while displaying a fallback for the parts still loading.
 
-### ❌ Wrong — one slow query blocks everything
+### ❌ Wrong - one slow query blocks everything
 ```jsx
 // The entire page is blank until both queries finish
 export default async function UserProfile() {
@@ -21,7 +21,7 @@ export default async function UserProfile() {
 }
 ```
 
-### ✅ Right — stream fast content, suspend slow content
+### ✅ Right - stream fast content, suspend slow content
 ```jsx
 export default async function UserProfile() {
   const fastProfile = await getProfile();
@@ -47,7 +47,7 @@ export default async function UserProfile() {
 ### Why it matters
 When you `await` one query, then `await` another, they run in sequence. If each takes 500ms, the total is 1 second. If they don't depend on each other, fire both at the same time with `Promise.all` and finish in 500ms.
 
-### ❌ Wrong — sequential queries
+### ❌ Wrong - sequential queries
 ```jsx
 async function AsyncStats() {
   // Second query doesn't start until the first one finishes
@@ -58,7 +58,7 @@ async function AsyncStats() {
 }
 ```
 
-### ✅ Right — parallel queries
+### ✅ Right - parallel queries
 ```jsx
 async function AsyncStats() {
   // Both queries start at the same time

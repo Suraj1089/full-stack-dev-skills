@@ -1,7 +1,7 @@
 ## signals-explicit-calls
 
 ### Why it matters
-Django signals are implicit, meaning the code that triggers them has no idea they exist. This causes profound debugging nightmares (spaghetti execution) and can randomly break transaction integrity. Prefer explicit service layer function calls instead.
+Django signals are implicit, so callers cannot see their side effects. That makes control flow harder to trace and can affect transaction integrity. Prefer explicit service-layer calls.
 
 ### ❌ Wrong
 ```python
@@ -58,4 +58,4 @@ class Order(models.Model):
 ```
 
 ### Notes
-- Signals do not run during `bulk_create` or `bulk_update`. If your logic strictly lives in a signal, bulk operations will silently fail to execute it, leading to massive corrupted state.
+- Signals do not run during `bulk_create` or `bulk_update`. Business logic that exists only in a signal will be skipped by those operations.

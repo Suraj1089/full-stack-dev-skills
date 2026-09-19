@@ -120,7 +120,7 @@ User.objects.bulk_create(objects, batch_size=1000)
 ## orm-iterator
 
 ### Why it matters
-Django fiercely caches querysets directly to prevent superfluous database hits. If you query a hundred million rows fundamentally and loop through them exactly once , storing them very in memory exhaustively crashes your application with massive `MemoryError` exceptions permanently.
+Django caches QuerySets, which is useful for repeated access. For a one-pass query over a very large table, that cache can exhaust memory and raise `MemoryError`.
 
 ### ❌ Wrong
 ```python

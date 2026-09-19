@@ -3,7 +3,7 @@
 ## rerender-state-change
 
 ### Why it matters
-Calling `setState` or `dispatch` marks a component as dirty and schedules a re-render. That re-render cascades **down** the tree — every child re-renders too, unless stopped by a `React.memo` boundary.
+Calling `setState` or `dispatch` marks a component as dirty and schedules a re-render. That re-render cascades **down** the tree - every child re-renders too, unless stopped by a `React.memo` boundary.
 
 ```jsx
 function MetricsDashboard() {
@@ -24,14 +24,14 @@ function MetricsDashboard() {
 ## rerender-parent
 
 ### Why it matters
-When a parent re-renders, **every child re-renders** by default — regardless of whether any props actually changed. React doesn't automatically diff props. It just re-runs the child function. The only way to stop the cascade is `React.memo`.
+When a parent re-renders, **every child re-renders** by default - regardless of whether any props actually changed. React doesn't automatically diff props. It just re-runs the child function. The only way to stop the cascade is `React.memo`.
 
 ---
 
 ## rerender-context
 
 ### Why it matters
-When you call `useContext(SomeContext)`, that component re-renders whenever the context's `value` changes — even if you only read a small piece of a large context object.
+When you call `useContext(SomeContext)`, that component re-renders whenever the context's `value` changes - even if you only read a small piece of a large context object.
 
 ### Ways to reduce unnecessary context renders
 1. **Split contexts**: Separate unrelated data into different contexts (see `context-splitting`).

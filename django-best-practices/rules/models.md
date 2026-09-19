@@ -1,7 +1,7 @@
 ## model-fat-models
 
 ### Why it matters
-Putting business logic in views makes it impossible to reuse that code elsewhere (management commands, Celery tasks, signals, other views). Pushing logic down into models ("Fat Models") or a separate service layer ensures the code is DRY and directly testable without mocking HTTP requests.
+Business logic in views is hard to reuse from management commands, Celery tasks, signals, and other views. Put it in models or a service layer so it can be tested without mocking HTTP requests.
 
 ### ❌ Wrong
 ```python
@@ -36,7 +36,7 @@ def publish_post_view(request, post_id):
 ```
 
 ### Notes
-- Avoid completely overloading models with too many methods. For massive apps, extract complex workflows into a distinct `services.py` layer.
+- Avoid overloading models with too many methods. Move complex workflows into a `services.py` layer.
 
 ---
 
@@ -122,7 +122,7 @@ class Book(models.Model):
 ## model-constraints
 
 ### Why it matters
-Validating cleanly strictly robustly at the Django application level fails during race conditions or bulk operations. Constraints pushed directly into the backend database enforce integrity perfectly.
+Application-level validation can fail during races or bulk operations. Put integrity constraints in the database.
 
 ### ❌ Wrong
 ```python

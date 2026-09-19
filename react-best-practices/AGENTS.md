@@ -1,4 +1,4 @@
-# React Best Practices — Full Reference
+# React Best Practices - Full Reference
 
 > Compiled from all rule files. Read this if you want every rule in one context window.
 > For individual rules, read `rules/<rule-name>.md` directly.
@@ -12,7 +12,7 @@
 ### Why it matters
 The browser has to download, parse, and compile your JavaScript before the page becomes interactive. If you import a 500KB chart library and a settings modal at the top of your file, users pay for that download even if they never see those components. `React.lazy()` (or `next/dynamic`) splits those components into separate chunks that load only when needed.
 
-### ❌ Wrong — monolithic bundle
+### ❌ Wrong - monolithic bundle
 ```jsx
 import HugeChartLibrary from './HugeChartLibrary';
 import ComplexSettingsModal from './ComplexSettingsModal';
@@ -32,7 +32,7 @@ function Dashboard() {
 }
 ```
 
-### ✅ Right — split and load on demand
+### ✅ Right - split and load on demand
 ```jsx
 // These files aren't downloaded until the component is rendered
 const HugeChartLibrary = React.lazy(() => import('./HugeChartLibrary'));
@@ -66,13 +66,13 @@ function Dashboard() {
 ### Why it matters
 Barrel files (`index.js` files that re-export everything from a folder) can prevent bundlers from tree-shaking. If you import one small button from a barrel that re-exports 5,000 components, the bundler may pull in all of them.
 
-### ❌ Wrong — barrel import
+### ❌ Wrong - barrel import
 ```jsx
 // Webpack may pull in every component in the ui/ folder
 import { Button, Checkbox, HugeDatePicker } from '@/components/ui';
 ```
 
-### ✅ Right — direct imports
+### ✅ Right - direct imports
 ```jsx
 // Only imports the code you actually use
 import Button from '@/components/ui/Button';
@@ -96,9 +96,9 @@ When a function is created in JavaScript, it captures a snapshot of all the vari
 ## closure-stale-callback
 
 ### Why it matters
-If a function is cached — via `useCallback` with an empty dep array, stored in a ref at init time, or passed to a `useEffect` that doesn't list it as a dependency — it captures the values from the render where it was created. Later state changes are invisible to it. This is a **stale closure**: your app silently uses outdated values.
+If a function is cached - via `useCallback` with an empty dep array, stored in a ref at init time, or passed to a `useEffect` that doesn't list it as a dependency - it captures the values from the render where it was created. Later state changes are invisible to it. This is a **stale closure**: your app silently uses outdated values.
 
-### ❌ Wrong — empty dependency array freezes state
+### ❌ Wrong - empty dependency array freezes state
 ```jsx
 function SearchForm() {
   const [query, setQuery] = useState('');
@@ -119,7 +119,7 @@ function SearchForm() {
 }
 ```
 
-### ✅ Right — include all dependencies
+### ✅ Right - include all dependencies
 ```jsx
 function SearchForm() {
   const [query, setQuery] = useState('');
@@ -140,7 +140,7 @@ function SearchForm() {
 ## closure-ref-trick
 
 ### Why it matters
-Sometimes you need a callback that is **reference-stable** (same function identity across renders, so memoized children don't re-render) but also reads the **latest** state when called. These goals conflict — unless you use a ref to bridge the gap.
+Sometimes you need a callback that is **reference-stable** (same function identity across renders, so memoized children don't re-render) but also reads the **latest** state when called. These goals conflict - unless you use a ref to bridge the gap.
 
 ### ✅ Pattern: stable wrapper + mutable ref
 ```jsx
@@ -182,7 +182,7 @@ function DataGrid({ onSelectionChange }) {
 
 # Composition patterns
 
-The most overlooked React optimization tool is **component structure**. Before reaching for `useMemo`, `useCallback`, or `React.memo`, consider whether rearranging your components can solve the problem. Composition fixes performance at the architecture level — no runtime overhead, no dependency arrays, no comparison checks.
+The most overlooked React optimization tool is **component structure**. Before reaching for `useMemo`, `useCallback`, or `React.memo`, consider whether rearranging your components can solve the problem. Composition fixes performance at the architecture level - no runtime overhead, no dependency arrays, no comparison checks.
 
 ---
 
@@ -191,7 +191,7 @@ The most overlooked React optimization tool is **component structure**. Before r
 ### Why it matters
 State in a parent triggers re-renders for the entire subtree. If that state only affects a small part of the UI (like a sidebar toggle), you're re-rendering everything else for no reason. Extract the stateful piece into its own component. Now only that component re-renders.
 
-### ❌ Wrong — state lives high, everything re-renders
+### ❌ Wrong - state lives high, everything re-renders
 ```jsx
 function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -211,7 +211,7 @@ function Dashboard() {
 }
 ```
 
-### ✅ Right — extract the stateful piece
+### ✅ Right - extract the stateful piece
 ```jsx
 function SidebarToggle() {           
   const [isOpen, setIsOpen] = useState(false);
@@ -243,7 +243,7 @@ function Dashboard() {
 ### Why it matters
 When a component renders its `children`, those children are **not re-created** when the parent's own state changes. The children were instantiated in the outer scope (which didn't re-render), so their JSX element references stay the same. This shields heavy content from a parent's frequent state updates.
 
-### ✅ Pattern — children as a shield
+### ✅ Pattern - children as a shield
 ```jsx
 // This component updates state on every scroll event
 function ScrollProgressTracker({ children }) {
@@ -279,9 +279,9 @@ function App() {
 ## compose-components-as-props
 
 ### Why it matters
-Passing React elements as named props (the "slots" pattern) works the same way as `children` — elements from the outer scope aren't affected by the inner component's state. This gives you flexible, decoupled layouts without prop drilling.
+Passing React elements as named props (the "slots" pattern) works the same way as `children` - elements from the outer scope aren't affected by the inner component's state. This gives you flexible, decoupled layouts without prop drilling.
 
-### ✅ Pattern — named slots
+### ✅ Pattern - named slots
 ```jsx
 // Layout doesn't know or care what goes in each pane
 function TwoColumnLayout({ leftContent, rightContent }) {
@@ -296,7 +296,7 @@ function TwoColumnLayout({ leftContent, rightContent }) {
   );
 }
 
-// Usage — content is defined outside, unaffected by resize state
+// Usage - content is defined outside, unaffected by resize state
 function CRMApp() {
   return (
     <TwoColumnLayout
@@ -319,9 +319,9 @@ Passing `<ContactsSidebar />` as a prop doesn't call its render function. It pas
 ## rerender-transitions
 
 ### Why it matters
-React 18 added concurrent rendering. By default, every `setState` call is urgent — React blocks the main thread until it finishes rendering, which locks up user input. `useTransition` lets you mark a state update as non-urgent. React will start rendering it in the background, but if the user types or clicks, React drops that background work to handle the interaction first. The result: no input lag.
+React 18 added concurrent rendering. By default, every `setState` call is urgent - React blocks the main thread until it finishes rendering, which locks up user input. `useTransition` lets you mark a state update as non-urgent. React will start rendering it in the background, but if the user types or clicks, React drops that background work to handle the interaction first. The result: no input lag.
 
-### ❌ Wrong — blocking the main thread
+### ❌ Wrong - blocking the main thread
 ```jsx
 function SearchPage() {
   const [query, setQuery] = useState('');
@@ -343,7 +343,7 @@ function SearchPage() {
 }
 ```
 
-### ✅ Right — prioritize typing over the heavy render
+### ✅ Right - prioritize typing over the heavy render
 ```jsx
 function SearchPage() {
   const [query, setQuery] = useState('');
@@ -375,9 +375,9 @@ function SearchPage() {
 ## rerender-use-deferred-value
 
 ### Why it matters
-`useTransition` requires direct access to the `setState` call so you can wrap it. `useDeferredValue` is for when you receive a prop from a parent and have no control over how it's set. It returns a "lagging" version of the value — the component keeps showing the old value while React computes the new one in the background.
+`useTransition` requires direct access to the `setState` call so you can wrap it. `useDeferredValue` is for when you receive a prop from a parent and have no control over how it's set. It returns a "lagging" version of the value - the component keeps showing the old value while React computes the new one in the background.
 
-### ✅ Pattern — deferring an incoming prop
+### ✅ Pattern - deferring an incoming prop
 ```jsx
 // SearchResults doesn't control `query`, it just receives it.
 function SearchResults({ query }) {
@@ -409,11 +409,11 @@ function SearchResults({ query }) {
 ## context-splitting
 
 ### Why it matters
-Any component that calls `useContext(SomeContext)` re-renders whenever that context's value changes. If you shove everything — theme, user, locale, feature flags — into one giant context object, then every consumer re-renders when *any* of those values changes, even if a given component only cares about one of them.
+Any component that calls `useContext(SomeContext)` re-renders whenever that context's value changes. If you shove everything - theme, user, locale, feature flags - into one giant context object, then every consumer re-renders when *any* of those values changes, even if a given component only cares about one of them.
 
 Split unrelated data into separate contexts. Components that read `UserContext` won't re-render when the theme changes, and vice versa.
 
-### ❌ Wrong — monolithic context
+### ❌ Wrong - monolithic context
 ```jsx
 // One context for everything
 const AppContext = createContext();
@@ -437,7 +437,7 @@ function Header() {
 }
 ```
 
-### ✅ Right — separate contexts by domain
+### ✅ Right - separate contexts by domain
 ```jsx
 // Each domain gets its own context
 const ThemeContext = createContext();
@@ -474,13 +474,13 @@ function Header() {
 ### Why it matters
 `useEffect` runs **after** the browser has painted. If your effect measures the DOM (say, getting a container's width) and then calls `setState` based on that measurement, you get a double render. The user sees:
 
-1. First paint — the element appears at position 0,0 (or some default).
+1. First paint - the element appears at position 0,0 (or some default).
 2. The effect fires, updates state, and triggers a re-render.
-3. Second paint — the element jumps to the correct position.
+3. Second paint - the element jumps to the correct position.
 
-That jump is visible as a flash or flicker. For layout measurements that determine positioning, use `useLayoutEffect` instead — it runs **after** React updates the DOM but **before** the browser paints, so the user only ever sees the final result.
+That jump is visible as a flash or flicker. For layout measurements that determine positioning, use `useLayoutEffect` instead - it runs **after** React updates the DOM but **before** the browser paints, so the user only ever sees the final result.
 
-### ❌ Wrong — flicker with useEffect
+### ❌ Wrong - flicker with useEffect
 ```jsx
 function Tooltip({ targetRect, children }) {
   const tooltipRef = useRef(null);
@@ -503,7 +503,7 @@ function Tooltip({ targetRect, children }) {
 }
 ```
 
-### ✅ Right — no flicker with useLayoutEffect
+### ✅ Right - no flicker with useLayoutEffect
 ```jsx
 function Tooltip({ targetRect, children }) {
   const tooltipRef = useRef(null);
@@ -537,7 +537,7 @@ function Tooltip({ targetRect, children }) {
 ### Why it matters
 `useLayoutEffect` doesn't run on the server (Next.js, Remix). React emits a warning, and the measurement never happens during server rendering. This creates a hydration mismatch between the server HTML and the client's first render.
 
-### ✅ Pattern — isReady gate for SSR
+### ✅ Pattern - isReady gate for SSR
 ```jsx
 function ResponsiveNav({ items }) {
   const navRef = useRef(null);
@@ -568,7 +568,7 @@ The `useIsomorphicLayoutEffect` hook from `usehooks-ts` or `react-use` automatic
 
 # Memoization usage
 
-Try composition first. `React.memo`, `useMemo`, and `useCallback` solve specific, measured performance problems — they're not defensive defaults. Adding them everywhere hurts performance because the comparison checks and memory allocation have their own cost.
+Try composition first. `React.memo`, `useMemo`, and `useCallback` solve specific, measured performance problems - they're not defensive defaults. Adding them everywhere hurts performance because the comparison checks and memory allocation have their own cost.
 
 ---
 
@@ -602,19 +602,19 @@ const ExpensiveDataGrid = React.memo(function ExpensiveDataGrid({ rows, columns 
 ### Why it matters
 `React.memo` uses **shallow equality**. Primitives (`string`, `number`, `boolean`) compare by value. Objects, arrays, and functions compare by **reference**. If you create an object or callback inside a component body, it gets a new reference every render, breaking `React.memo` on any child you pass it to.
 
-### ❌ Wrong — new object reference every render
+### ❌ Wrong - new object reference every render
 ```jsx
 function Dashboard() {
   const [count, setCount] = useState(0);
 
-  // New object on every render — ExpensiveDataGrid's memo always fails
+  // New object on every render - ExpensiveDataGrid's memo always fails
   const gridConfig = { theme: 'dark', sort: 'asc' }; 
 
   return <ExpensiveDataGrid config={gridConfig} />; 
 }
 ```
 
-### ✅ Right — stabilize references
+### ✅ Right - stabilize references
 ```jsx
 function Dashboard() {
   const [count, setCount] = useState(0);
@@ -623,7 +623,7 @@ function Dashboard() {
   const gridConfig = useMemo(() => ({ theme: 'dark', sort: 'asc' }), []); 
   const onRowClick = useCallback((id) => openDetails(id), []); 
 
-  // Now memo works — props haven't changed
+  // Now memo works - props haven't changed
   return <ExpensiveDataGrid config={gridConfig} onClick={onRowClick} />; 
 }
 ```
@@ -640,7 +640,7 @@ function Dashboard() {
 function Form() {
   const [text, setText] = useState('');
 
-  // Pointless. <button> is native DOM — it doesn't check props with React.memo.
+  // Pointless. <button> is native DOM - it doesn't check props with React.memo.
   const onSubmit = useCallback(() => submitForm(), []);
   
   // Pointless. <Input> isn't wrapped in React.memo. It'll re-render regardless.
@@ -664,7 +664,7 @@ function Form() {
 ### Why it matters
 Wrapping a component in `React.memo` while passing `children` doesn't work. JSX compiles children into `React.createElement(...)` inside the parent, so the children prop gets a new object reference every render. The memo comparison on `{ children }` fails every time.
 
-### ❌ Wrong — memo broken by children
+### ❌ Wrong - memo broken by children
 ```jsx
 const MemoizedCard = React.memo(function Card({ children }) {
   return <div className="card-ui">{children}</div>;
@@ -682,7 +682,7 @@ function Parent() {
 }
 ```
 
-### ✅ Fix — memoize the children in the parent
+### ✅ Fix - memoize the children in the parent
 ```jsx
 function Parent() {
   const [count, setCount] = useState(0);
@@ -694,7 +694,7 @@ function Parent() {
 }
 ```
 
-Or use composition patterns (`compose-children-prop`) to avoid the problem entirely — no memoization needed.
+Or use composition patterns (`compose-children-prop`) to avoid the problem entirely - no memoization needed.
 
 ---
 **Related rules:** `rerender-parent`, `compose-children-prop`
@@ -709,7 +709,7 @@ React compares its internal fiber tree between renders. If a component element h
 
 This causes bugs when you conditionally swap between two components that share the same root type.
 
-### ❌ Wrong — shared position leaks state
+### ❌ Wrong - shared position leaks state
 ```jsx
 function App() {
   const [isLogin, setIsLogin] = useState(true);
@@ -728,7 +728,7 @@ function App() {
 ```
 **The bug:** A user types "John" in the Username field, clicks "Switch Mode", and "John" is still in the Email field. React reused the `<Input>` instance because the type and position didn't change.
 
-### ✅ Right — use `key` to force a new instance
+### ✅ Right - use `key` to force a new instance
 ```jsx
 {isLogin
   ? <Input key="login-username" placeholder="Username" />
@@ -742,7 +742,7 @@ Different keys tell React these are separate components. It destroys the old one
 ## recon-key-identity
 
 ### Why it matters
-The `key` prop isn't just an ESLint nag for lists. It's React's mechanism for tracking **identity**. A changed key tells React: "This is a different entity — destroy the old one and create a new one." A stable key tells React: "Same thing, just update its props."
+The `key` prop isn't just an ESLint nag for lists. It's React's mechanism for tracking **identity**. A changed key tells React: "This is a different entity - destroy the old one and create a new one." A stable key tells React: "Same thing, just update its props."
 
 ### Key requirements
 | Requirement | What goes wrong if you break it |
@@ -751,9 +751,9 @@ The `key` prop isn't just an ESLint nag for lists. It's React's mechanism for tr
 | Stable across renders | Components unmount and remount constantly, losing scroll position and focus |
 | Derived from data | Use `item.id`, not the array index (unless the list never reorders) |
 
-### ❌ Wrong — unstable keys
+### ❌ Wrong - unstable keys
 ```jsx
-// Math.random() creates a new key every render — the whole list rebuilds
+// Math.random() creates a new key every render - the whole list rebuilds
 {users.map(user => <UserRow key={Math.random()} user={user} />)}
 
 // Array index is dangerous if users can be reordered or deleted.
@@ -761,7 +761,7 @@ The `key` prop isn't just an ESLint nag for lists. It's React's mechanism for tr
 {users.map((user, index) => <UserRow key={index} user={user} />)}
 ```
 
-### ✅ Right — stable identity from data
+### ✅ Right - stable identity from data
 ```jsx
 {users.map(user => <UserRow key={user.uuid} user={user} />)}
 ```
@@ -771,14 +771,14 @@ The `key` prop isn't just an ESLint nag for lists. It's React's mechanism for tr
 ## recon-no-inline-definition
 
 ### Why it matters
-Defining a component function inside another component's render body means React sees a brand-new function type every render. Since the type changed, React unmounts the old instance and mounts a new one — wiping all its state, tearing down effects, and causing flickering.
+Defining a component function inside another component's render body means React sees a brand-new function type every render. Since the type changed, React unmounts the old instance and mounts a new one - wiping all its state, tearing down effects, and causing flickering.
 
-### ❌ Wrong — inline component definition
+### ❌ Wrong - inline component definition
 ```jsx
 function UserProfile() {
   const [clicks, setClicks] = useState(0);
 
-  // New function reference every render — React treats it as a new component type
+  // New function reference every render - React treats it as a new component type
   function InnerBadge() {
     const [hovered, setHovered] = useState(false); // State resets every parent render
     return <span onMouseEnter={() => setHovered(true)}>Role</span>;
@@ -792,7 +792,7 @@ function UserProfile() {
 }
 ```
 
-### ✅ Right — define components at module level
+### ✅ Right - define components at module level
 ```jsx
 // Defined once. React reuses the same type.
 function InnerBadge() {
@@ -811,7 +811,7 @@ function UserProfile() {
 ## recon-key-reset
 
 ### Why it matters
-Sometimes you need to wipe a component's state completely — when routing to a different entity or switching data contexts. Instead of writing `useEffect` chains that manually reset each piece of state, change the component's `key`. React treats a key change as replacing the component entirely: unmount the old one, mount a fresh one.
+Sometimes you need to wipe a component's state completely - when routing to a different entity or switching data contexts. Instead of writing `useEffect` chains that manually reset each piece of state, change the component's `key`. React treats a key change as replacing the component entirely: unmount the old one, mount a fresh one.
 
 ### ✅ Pattern: key-driven reset
 ```jsx
@@ -869,7 +869,7 @@ function SearchBox() {
 ## ref-forward
 
 ### Why it matters
-By default, you can't pass a `ref` prop to a custom function component — React strips it. For a parent to access a DOM node inside a child component, the child must opt in using `forwardRef`.
+By default, you can't pass a `ref` prop to a custom function component - React strips it. For a parent to access a DOM node inside a child component, the child must opt in using `forwardRef`.
 
 ### ✅ Using forwardRef
 ```jsx
@@ -894,14 +894,14 @@ function CommandPalette() {
 }
 ```
 
-> **React 19 note:** In React 19+, `ref` is a regular prop — `forwardRef` is deprecated. You destructure it directly: `function FancyInput({ ref, children })`.
+> **React 19 note:** In React 19+, `ref` is a regular prop - `forwardRef` is deprecated. You destructure it directly: `function FancyInput({ ref, children })`.
 
 ---
 
 ## ref-imperative-handle
 
 ### Why it matters
-Forwarding a raw DOM ref gives the parent full access to the node — it could mutate styles, read values, or call any DOM method. `useImperativeHandle` lets you expose a limited, controlled API instead.
+Forwarding a raw DOM ref gives the parent full access to the node - it could mutate styles, read values, or call any DOM method. `useImperativeHandle` lets you expose a limited, controlled API instead.
 
 ### ✅ Controlled API surface
 ```jsx
@@ -929,7 +929,7 @@ const SecureTextInput = forwardRef(function SecureTextInput(props, ref) {
 ## ref-no-overuse
 
 ### Why it matters
-React is built around declarative rendering — you describe what the UI should look like given the current state, and React figures out the DOM changes. Refs are an escape hatch for things React can't do declaratively. Reach for declarative patterns first.
+React is built around declarative rendering - you describe what the UI should look like given the current state, and React figures out the DOM changes. Refs are an escape hatch for things React can't do declaratively. Reach for declarative patterns first.
 
 ### Prefer declarative approaches
 | Imperative (escape hatch) | Declarative (preferred) |
@@ -951,7 +951,7 @@ Refs are valid for: focus management, scroll positioning, WebGL/canvas setup, an
 ### Why it matters
 React can diff and reconcile thousands of components quickly, but the browser struggles to lay out and paint thousands of actual DOM nodes. Virtualization (or "windowing") solves this by only rendering the items currently visible on screen. Off-screen items don't exist in the DOM at all.
 
-### ❌ Wrong — rendering 10,000 DOM nodes
+### ❌ Wrong - rendering 10,000 DOM nodes
 ```jsx
 function InvoiceList({ invoices }) {
   // All 10,000 rows exist in the DOM at once.
@@ -964,7 +964,7 @@ function InvoiceList({ invoices }) {
 }
 ```
 
-### ✅ Right — virtualize with react-window
+### ✅ Right - virtualize with react-window
 ```jsx
 import { FixedSizeList } from 'react-window';
 
@@ -996,7 +996,7 @@ function InvoiceList({ invoices }) {
 ### Why it matters
 Every extra `<div>` wrapper adds depth to the DOM tree. Deeply nested DOM trees make CSS layout calculations slower and create elements the browser has to manage for no reason. When a wrapper div has no styling or semantic purpose, replace it with a fragment (`<>...</>`).
 
-### ❌ Wrong — pointless wrapper div
+### ❌ Wrong - pointless wrapper div
 ```jsx
 function DashboardHeader() {
   // This div serves no styling or semantic purpose
@@ -1009,7 +1009,7 @@ function DashboardHeader() {
 }
 ```
 
-### ✅ Right — fragment instead
+### ✅ Right - fragment instead
 ```jsx
 function DashboardHeader() {
   // Groups elements without adding a DOM node
@@ -1031,7 +1031,7 @@ function DashboardHeader() {
 ## rerender-state-change
 
 ### Why it matters
-Calling `setState` or `dispatch` marks a component as dirty and schedules a re-render. That re-render cascades **down** the tree — every child re-renders too, unless stopped by a `React.memo` boundary.
+Calling `setState` or `dispatch` marks a component as dirty and schedules a re-render. That re-render cascades **down** the tree - every child re-renders too, unless stopped by a `React.memo` boundary.
 
 ```jsx
 function MetricsDashboard() {
@@ -1052,14 +1052,14 @@ function MetricsDashboard() {
 ## rerender-parent
 
 ### Why it matters
-When a parent re-renders, **every child re-renders** by default — regardless of whether any props actually changed. React doesn't automatically diff props. It just re-runs the child function. The only way to stop the cascade is `React.memo`.
+When a parent re-renders, **every child re-renders** by default - regardless of whether any props actually changed. React doesn't automatically diff props. It just re-runs the child function. The only way to stop the cascade is `React.memo`.
 
 ---
 
 ## rerender-context
 
 ### Why it matters
-When you call `useContext(SomeContext)`, that component re-renders whenever the context's `value` changes — even if you only read a small piece of a large context object.
+When you call `useContext(SomeContext)`, that component re-renders whenever the context's `value` changes - even if you only read a small piece of a large context object.
 
 ### Ways to reduce unnecessary context renders
 1. **Split contexts**: Separate unrelated data into different contexts (see `context-splitting`).
@@ -1099,7 +1099,7 @@ The only exception is `React.memo`, which intercepts the re-render, checks old p
 ### Why it matters
 React Server Components (RSC) render on the server and stream the result to the client as serialized HTML and UI instructions. They ship **zero JavaScript** to the browser. By co-locating data fetching with the component that uses it, you avoid client-side fetch waterfalls and loading spinners.
 
-### ❌ Wrong — everything is a Client Component
+### ❌ Wrong - everything is a Client Component
 ```jsx
 'use client' // Forces the entire route to run on the client
 
@@ -1116,13 +1116,13 @@ export default function DashboardPage() {
 }
 ```
 
-### ✅ Right — async Server Component
+### ✅ Right - async Server Component
 ```jsx
 // No 'use client'. Runs on the server.
 import { fetchUserData } from '@/db/queries'; 
 
 export default async function DashboardPage() {
-  // Direct await — no API route needed, no client JS shipped
+  // Direct await - no API route needed, no client JS shipped
   const data = await fetchUserData(); 
 
   return <HeavyDashboard data={data} />; 
@@ -1136,7 +1136,7 @@ export default async function DashboardPage() {
 ### Why it matters
 When a Server Component passes props to a `'use client'` component, every prop crosses a network boundary and must be serializable. Passing an entire database row (50 columns, including sensitive fields) wastes bandwidth and risks leaking data the client shouldn't see.
 
-### ❌ Wrong — passing the entire database record
+### ❌ Wrong - passing the entire database record
 ```jsx
 export default async function ProductPage({ id }) {
   // Full database row, including admin notes and internal IDs
@@ -1147,7 +1147,7 @@ export default async function ProductPage({ id }) {
 }
 ```
 
-### ✅ Right — pick only what the client needs
+### ✅ Right - pick only what the client needs
 ```jsx
 export default async function ProductPage({ id }) {
   const rawDbProduct = await db.products.find(id); 
@@ -1168,9 +1168,9 @@ export default async function ProductPage({ id }) {
 ## server-auth-actions
 
 ### Why it matters
-Server Actions (React 19) let you call server-side mutations directly from `<form action={...}>`. But they're effectively public API endpoints — anyone can call them. You have to authenticate and authorize on the server side, just like you would with any API route.
+Server Actions (React 19) let you call server-side mutations directly from `<form action={...}>`. But they're effectively public API endpoints - anyone can call them. You have to authenticate and authorize on the server side, just like you would with any API route.
 
-### ❌ Wrong — no authentication
+### ❌ Wrong - no authentication
 ```jsx
 'use server'
 
@@ -1180,7 +1180,7 @@ export async function deleteUserAccount(userId) {
 }
 ```
 
-### ✅ Right — authenticate before mutating
+### ✅ Right - authenticate before mutating
 ```jsx
 'use server'
 import { getSession } from '@/auth';
@@ -1207,7 +1207,7 @@ export async function deleteUserAccount(userId) {
 ### Why it matters
 Without Suspense, React waits for every async operation to finish before showing anything. If your page has a fast query (user profile) and a slow one (billing history), the whole page stays blank until the slow query completes. `<Suspense>` lets you show the fast parts immediately while displaying a fallback for the parts still loading.
 
-### ❌ Wrong — one slow query blocks everything
+### ❌ Wrong - one slow query blocks everything
 ```jsx
 // The entire page is blank until both queries finish
 export default async function UserProfile() {
@@ -1223,7 +1223,7 @@ export default async function UserProfile() {
 }
 ```
 
-### ✅ Right — stream fast content, suspend slow content
+### ✅ Right - stream fast content, suspend slow content
 ```jsx
 export default async function UserProfile() {
   const fastProfile = await getProfile();
@@ -1249,7 +1249,7 @@ export default async function UserProfile() {
 ### Why it matters
 When you `await` one query, then `await` another, they run in sequence. If each takes 500ms, the total is 1 second. If they don't depend on each other, fire both at the same time with `Promise.all` and finish in 500ms.
 
-### ❌ Wrong — sequential queries
+### ❌ Wrong - sequential queries
 ```jsx
 async function AsyncStats() {
   // Second query doesn't start until the first one finishes
@@ -1260,7 +1260,7 @@ async function AsyncStats() {
 }
 ```
 
-### ✅ Right — parallel queries
+### ✅ Right - parallel queries
 ```jsx
 async function AsyncStats() {
   // Both queries start at the same time

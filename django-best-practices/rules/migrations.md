@@ -66,4 +66,4 @@ class Migration(migrations.Migration):
 ```
 
 ### Notes
-- Massive schema design alterations mandate splitting `AddField` from `AlterField` naturally to evade downtime creatively.
+- Split large schema changes into separate `AddField` and `AlterField` migrations to limit downtime.

@@ -1,4 +1,4 @@
-# Django Best Practices — Full Reference
+# Django Best Practices - Full Reference
 > Compiled from all rule files. For focused context, read rules/<rule>.md directly.
 ---
 ## admin-nplusone
@@ -25,7 +25,7 @@ class OrderAdmin(admin.ModelAdmin):
 ```
 
 ### Notes
-- `list_select_related = True` automatically pre-fetches all `ForeignKey` relations present on the model, but it is directly preferable to pass a tuple targeting the exact tables needed.
+- `list_select_related = True` prefetches every `ForeignKey` relation on the model. Prefer a tuple that names only the relations the page needs.
 
 ---
 
@@ -124,7 +124,7 @@ def get_active_premium_users() -> QuerySet[User]:
 ```
 
 ### Notes
-- Selectors ONLY read data safely. Services ONLY write data comprehensively.
+- Selectors read data. Services write data.
 
 
 ---
@@ -159,7 +159,7 @@ def process_payment(order_id, amount):
 ```
 
 ### Notes
-- Always design tasks expecting them to blindly run twice simultaneously. Ensure database constraints or explicit locking handles conflicts cleanly.
+- Assume a task may run twice at the same time. Use database constraints or explicit locking to handle conflicts.
 
 ---
 
@@ -295,7 +295,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 ## channels-channel-layers
 
 ### Why it matters
-Channel layers facilitate cross-process communication (via Redis). Sending massive python ORM objects directly crashes the serializer. Only raw valid JSON primitives efficiently traverse over the Redis channel.
+Channel layers handle cross-process communication through Redis. ORM objects cannot be serialized reliably, so send JSON-compatible values instead.
 
 ### ❌ Wrong
 ```python
@@ -400,7 +400,7 @@ def deposit_money(wallet_id, amount):
 ## orm-select-for-update-nowait
 
 ### Why it matters
-Occasionally, having a process wait for a lock is a terrible idea—for example, a polling queue worker checking if a job is free. By skipping already-locked rows implicitly, the application scales dramatically without creating database deadlocks.
+Occasionally, having a process wait for a lock is a terrible idea - for example, a polling queue worker checking if a job is free. By skipping already-locked rows implicitly, the application scales dramatically without creating database deadlocks.
 
 ### ❌ Wrong
 ```python
@@ -539,7 +539,7 @@ class Migration(migrations.Migration):
 ```
 
 ### Notes
-- Massive schema design alterations mandate splitting `AddField` from `AlterField` naturally to evade downtime creatively.
+- Split large schema changes into separate `AddField` and `AlterField` migrations to limit downtime.
 
 
 ---
@@ -660,15 +660,15 @@ class Book(models.Model):
 ```
 
 ### Notes
-- Consolidate all database indexing cleanly directly inside `Meta.indexes`.
-- Name indexes securely directly securely. Do not rely on Django's auto-generated hashed names in order to write clean zero-downtime database upgrades later.
+- Keep database indexes in `Meta.indexes`.
+- Give indexes explicit names instead of relying on Django's generated names, especially for zero-downtime migrations.
 
 ---
 
 ## model-constraints
 
 ### Why it matters
-Validating cleanly strictly robustly at the Django application level fails during race conditions or bulk operations. Constraints pushed directly into the backend database enforce integrity perfectly.
+Application-level validation can fail during races or bulk operations. Put integrity constraints in the database.
 
 ### ❌ Wrong
 ```python
@@ -840,7 +840,7 @@ User.objects.bulk_create(objects, batch_size=1000)
 ## orm-iterator
 
 ### Why it matters
-Django fiercely caches querysets directly to prevent superfluous database hits. If you query a hundred million rows fundamentally and loop through them exactly once , storing them very in memory exhaustively crashes your application with massive `MemoryError` exceptions permanently.
+Django caches QuerySets, which is useful for repeated access. For a one-pass query over a very large table, that cache can exhaust memory and raise `MemoryError`.
 
 ### ❌ Wrong
 ```python
@@ -858,8 +858,8 @@ for product in Product.objects.iterator(chunk_size=2000):
 ```
 
 ### Notes
-- Do not use `iterator()` identically on tiny querysets purely; the cache is intrinsically beneficial for them fully.
-- Essential primarily exclusively very for enormous data streaming strictly .
+- Do not use `iterator()` for small querysets unless you have a specific reason. QuerySet caching is useful for them.
+- Reserve it for large exports and other one-pass reads.
 
 ---
 
@@ -882,8 +882,8 @@ Person.objects.raw('SELECT * FROM myapp_person WHERE last_name = %s', ['Lovelace
 ```
 
 ### Notes
-- Fails aggressively definitively drastically permanently directly completely. Use cautiously exclusively naturally easily when perfectly unavoidable strictly fundamentally .
-- ALWAYS use extremely strictly uniquely correctly directly completely bound parameters naturally `[]` definitively implicitly. Never string functionally definitely interpolation naturally fully naturally.
+- Raw SQL is easy to get wrong, so use it only when the ORM cannot express the query.
+- Always use bound parameters such as `[]`. Never interpolate values into SQL strings.
 
 
 ---
@@ -891,7 +891,7 @@ Person.objects.raw('SELECT * FROM myapp_person WHERE last_name = %s', ['Lovelace
 ## orm-nplusone
 
 ### Why it matters
-The N+1 query problem occurs when you access a related object in a loop. Django's ORM is lazy, and accessing related data without directly fetching it beforehand causes the ORM to execute a separate SQL query for each item in the list, completely destroying performance for large datasets.
+The N+1 query problem occurs when a loop accesses related objects one at a time. Django's lazy ORM then runs one extra SQL query per item, which is slow for large result sets.
 
 ### ❌ Wrong
 ```python
@@ -1172,7 +1172,7 @@ Cross-Site Scripting (XSS) lets attackers execute arbitrary JavaScript in victim
 ## signals-explicit-calls
 
 ### Why it matters
-Django signals are implicit, meaning the code that triggers them has no idea they exist. This causes profound debugging nightmares (spaghetti execution) and can randomly break transaction integrity. Prefer explicit service layer function calls instead.
+Django signals are implicit, so callers cannot see their side effects. That makes control flow harder to trace and can affect transaction integrity. Prefer explicit service-layer calls.
 
 ### ❌ Wrong
 ```python
@@ -1229,7 +1229,7 @@ class Order(models.Model):
 ```
 
 ### Notes
-- Signals do not run during `bulk_create` or `bulk_update`. If your logic strictly lives in a signal, bulk operations will silently fail to execute it, leading to massive corrupted state.
+- Signals do not run during `bulk_create` or `bulk_update`. Business logic that exists only in a signal will be skipped by those operations.
 
 
 ---
@@ -1237,7 +1237,7 @@ class Order(models.Model):
 ## test-pytest-fixtures
 
 ### Why it matters
-`pytest-django` combined with `factory_boy` cleanly outperforms standard fixtures by allowing dynamic, explicit, reusable object creation avoiding database integrity headaches entirely.
+`pytest-django` with `factory_boy` supports explicit, reusable object creation without brittle static fixtures.
 
 ### ❌ Wrong
 ```python
@@ -1264,7 +1264,7 @@ def test_user_creation():
 ```
 
 ### Notes
-- Always fundamentally prefer generating data dynamically rather than loading static SQL/JSON dumps using `fixtures=`.
+- Prefer generating data dynamically instead of loading static SQL or JSON dumps with `fixtures=`.
 
 ---
 

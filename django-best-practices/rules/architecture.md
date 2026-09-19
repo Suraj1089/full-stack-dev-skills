@@ -55,4 +55,4 @@ def get_active_premium_users() -> QuerySet[User]:
 ```
 
 ### Notes
-- Selectors ONLY read data safely. Services ONLY write data comprehensively.
+- Selectors read data. Services write data.

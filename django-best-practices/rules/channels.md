@@ -1,7 +1,7 @@
 ## channels-sync-to-async
 
 ### Why it matters
-Django's ORM is synchronous. If you perform any database queries directly inside an asynchronous WebSocket Consumer (e.g., `AsyncWebsocketConsumer`), you will block the single asynchronous event loop. This severe mistake severely throttles all active WebSocket connections simultaneously.
+Django's ORM is synchronous. A database query inside an asynchronous WebSocket consumer, such as `AsyncWebsocketConsumer`, blocks the event loop and delays other connections.
 
 ### ❌ Wrong
 ```python
@@ -41,7 +41,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 ## channels-channel-layers
 
 ### Why it matters
-Channel layers facilitate cross-process communication (via Redis). Sending massive python ORM objects directly crashes the serializer. Only raw valid JSON primitives efficiently traverse over the Redis channel.
+Channel layers handle cross-process communication through Redis. ORM objects cannot be serialized reliably, so send JSON-compatible values instead.
 
 ### ❌ Wrong
 ```python

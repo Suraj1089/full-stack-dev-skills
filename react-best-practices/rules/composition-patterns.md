@@ -1,6 +1,6 @@
 # Composition patterns
 
-The most overlooked React optimization tool is **component structure**. Before reaching for `useMemo`, `useCallback`, or `React.memo`, consider whether rearranging your components can solve the problem. Composition fixes performance at the architecture level — no runtime overhead, no dependency arrays, no comparison checks.
+The most overlooked React optimization tool is **component structure**. Before reaching for `useMemo`, `useCallback`, or `React.memo`, consider whether rearranging your components can solve the problem. Composition fixes performance at the architecture level - no runtime overhead, no dependency arrays, no comparison checks.
 
 ---
 
@@ -9,7 +9,7 @@ The most overlooked React optimization tool is **component structure**. Before r
 ### Why it matters
 State in a parent triggers re-renders for the entire subtree. If that state only affects a small part of the UI (like a sidebar toggle), you're re-rendering everything else for no reason. Extract the stateful piece into its own component. Now only that component re-renders.
 
-### ❌ Wrong — state lives high, everything re-renders
+### ❌ Wrong - state lives high, everything re-renders
 ```jsx
 function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -29,7 +29,7 @@ function Dashboard() {
 }
 ```
 
-### ✅ Right — extract the stateful piece
+### ✅ Right - extract the stateful piece
 ```jsx
 function SidebarToggle() {           
   const [isOpen, setIsOpen] = useState(false);
@@ -61,7 +61,7 @@ function Dashboard() {
 ### Why it matters
 When a component renders its `children`, those children are **not re-created** when the parent's own state changes. The children were instantiated in the outer scope (which didn't re-render), so their JSX element references stay the same. This shields heavy content from a parent's frequent state updates.
 
-### ✅ Pattern — children as a shield
+### ✅ Pattern - children as a shield
 ```jsx
 // This component updates state on every scroll event
 function ScrollProgressTracker({ children }) {
@@ -97,9 +97,9 @@ function App() {
 ## compose-components-as-props
 
 ### Why it matters
-Passing React elements as named props (the "slots" pattern) works the same way as `children` — elements from the outer scope aren't affected by the inner component's state. This gives you flexible, decoupled layouts without prop drilling.
+Passing React elements as named props (the "slots" pattern) works the same way as `children` - elements from the outer scope aren't affected by the inner component's state. This gives you flexible, decoupled layouts without prop drilling.
 
-### ✅ Pattern — named slots
+### ✅ Pattern - named slots
 ```jsx
 // Layout doesn't know or care what goes in each pane
 function TwoColumnLayout({ leftContent, rightContent }) {
@@ -114,7 +114,7 @@ function TwoColumnLayout({ leftContent, rightContent }) {
   );
 }
 
-// Usage — content is defined outside, unaffected by resize state
+// Usage - content is defined outside, unaffected by resize state
 function CRMApp() {
   return (
     <TwoColumnLayout
